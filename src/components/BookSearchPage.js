@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BookCard from './BookCard';
-import BookFlow from './BookFlow';
 
 const BookSearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,7 +17,6 @@ const BookSearchPage = () => {
         setBooks([]);
       }
     };
-
     fetchBooks();
   }, [searchTerm]);
 
@@ -34,14 +32,16 @@ const BookSearchPage = () => {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search for a book..."
-        value={searchTerm}
-        onChange={handleSearch}
-      />
-      <div>
+    <div className="book-search-page">
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search for a book..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </div>
+      <div className="book-results">
         {books.map((book) => (
           <BookCard key={book.key} book={book} addToBookshelf={addToBookshelf} />
         ))}
