@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BookCard from './BookCard';
-import './BookshelfPage.css';
+import './BookShelfPage.css';
 
 const BookshelfPage = () => {
   const [bookshelf, setBookshelf] = useState([]);
