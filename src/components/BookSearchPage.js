@@ -1,23 +1,30 @@
+// src/components/BookSearchPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BookCard from './BookCard';
+import LoadingSpinner from './LoadingSpinner';
+import './BookSearchPage.css';
+
 
 const BookSearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [books, setBooks] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    const delaySearch = setTimeout(async () => {
       if (searchTerm.trim()) {
+        setIsSearching(true);
         const response = await axios.get(
           `https://openlibrary.org/search.json?q=${searchTerm}&limit=10&page=1`
         );
         setBooks(response.data.docs);
+        setIsSearching(false);
       } else {
         setBooks([]);
       }
-    };
-    fetchBooks();
+    }, 500);
+    return () => clearTimeout(delaySearch);
   }, [searchTerm]);
 
   const handleSearch = (e) => {
@@ -27,8 +34,10 @@ const BookSearchPage = () => {
   const addToBookshelf = (book) => {
     const storedBookshelf = localStorage.getItem('bookshelf') || '[]';
     const bookshelf = JSON.parse(storedBookshelf);
-    const updatedBookshelf = [...bookshelf, book];
-    localStorage.setItem('bookshelf', JSON.stringify(updatedBookshelf));
+    if (!bookshelf.some((b) => b.key === book.key)) {
+      const updatedBookshelf = [...bookshelf, book];
+      localStorage.setItem('bookshelf', JSON.stringify(updatedBookshelf));
+    }
   };
 
   return (
@@ -40,6 +49,7 @@ const BookSearchPage = () => {
           value={searchTerm}
           onChange={handleSearch}
         />
+        {isSearching && <LoadingSpinner />}
       </div>
       <div className="book-results">
         {books.map((book) => (
