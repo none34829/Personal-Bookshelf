@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './BookCard.css';
+import { FaPlusCircle, FaMinusCircle, FaCheckCircle, FaCircle, FaEnvelope, FaPiedPiper } from 'react-icons/fa';
+
 
 const BookCard = ({ book, addToBookshelf, removeFromBookshelf, markAsReadToggle }) => {
   const { title, author_name, edition_count, key, cover_i, read } = book;
@@ -57,15 +59,15 @@ const BookCard = ({ book, addToBookshelf, removeFromBookshelf, markAsReadToggle 
         <div className="book-actions">
           {removeFromBookshelf ? (
             <>
-              <button onClick={(e) => { e.stopPropagation(); handleRemoveFromBookshelf(); }}>Remove from Bookshelf</button>
+              <button onClick={(e) => { e.stopPropagation(); handleRemoveFromBookshelf(); }}> <FaMinusCircle /> Remove from Bookshelf</button>
               <button onClick={(e) => { e.stopPropagation(); markAsReadToggle(key); }}>
-                Mark as {read ? 'Unread' : 'Read'}
+                {read ? <FaCircle />: <FaCheckCircle /> } Mark as {read ? 'Unread' : 'Read'}
               </button>
             </>
           ) : isInBookshelf ? (
             <p>Already in your bookshelf. Go to "My Bookshelf" to remove the book.</p>
           ) : (
-            <button onClick={(e) => { e.stopPropagation(); handleAddToBookshelf(); }}>Add to Bookshelf</button>
+            <button onClick={(e) => { e.stopPropagation(); handleAddToBookshelf(); }}> <FaPlusCircle /> Add to Bookshelf</button>
           )}
         </div>
         {read !== undefined && (
