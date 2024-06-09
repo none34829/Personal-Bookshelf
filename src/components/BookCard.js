@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './BookCard.css';
-import { FaPlusCircle, FaMinusCircle, FaCheckCircle, FaCircle, FaEnvelope, FaPiedPiper } from 'react-icons/fa';
+import { FaPlusCircle, FaMinusCircle, FaCheckCircle, FaCircle } from 'react-icons/fa';
 
 
 const BookCard = ({ book, addToBookshelf, removeFromBookshelf, markAsReadToggle }) => {
@@ -47,6 +47,7 @@ const BookCard = ({ book, addToBookshelf, removeFromBookshelf, markAsReadToggle 
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
+      whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3 }}
     >
       <div className="book-cover">

@@ -1,15 +1,54 @@
-// src/components/BookSearchPage.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BookCard from './BookCard';
-import LoadingSpinner from './LoadingSpinner';
 import './BookSearchPage.css';
-
+import LoadingIndicator from './LoadingIndicator';
 
 const BookSearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [books, setBooks] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+useEffect(() => {
+  let timer;
+  const delaySearch = setTimeout(async () => {
+    if (searchTerm.trim()) {
+      setIsSearching(true);
+      setProgress(0); 
+
+      const startTime = new Date().getTime();
+      const response = await axios.get(
+        `https://openlibrary.org/search.json?q=${searchTerm}&limit=10&page=1`
+      );
+
+      const endTime = new Date().getTime();
+      const elapsedTime = endTime - startTime;
+      const loadingTime = 1000; 
+      const progressInterval = loadingTime / 100; 
+
+      timer = setInterval(() => {
+        const currentProgress = Math.min(Math.floor((elapsedTime / loadingTime) * 100), 99);
+        setProgress(currentProgress);
+      }, progressInterval);
+
+      setTimeout(() => {
+        clearInterval(timer);
+        setProgress(100);
+        setBooks(response.data.docs);
+        setIsSearching(false);
+      }, loadingTime);
+    } else {
+      setBooks([]);
+      setProgress(0);
+    }
+  }, 500);
+
+  return () => {
+    clearTimeout(delaySearch);
+    clearInterval(timer);
+  };
+}, [searchTerm]);
 
   useEffect(() => {
     const delaySearch = setTimeout(async () => {
@@ -45,11 +84,11 @@ const BookSearchPage = () => {
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Search for a book..."
+          placeholder="Hi there! What would you like to read today?"
           value={searchTerm}
           onChange={handleSearch}
         />
-        {isSearching && <LoadingSpinner />}
+        {isSearching && <LoadingIndicator progress={progress} />}
       </div>
       <div className="book-results">
         {books.map((book) => (
